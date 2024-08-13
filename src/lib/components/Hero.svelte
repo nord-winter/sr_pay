@@ -12,11 +12,11 @@
 
     <div class="container">
     <div class="row gy-4 justify-content-between">
-        <div class="col-lg-4 order-lg-last hero-img">
+        <div class="col-lg-4 order-lg-last hero-img" data-aos="zoom-out" data-aos-delay="100">
         <img src="{product}" class="img-fluid animated" alt="">
         </div>
 
-        <div class="col-lg-6  d-flex flex-column justify-content-center">
+        <div class="col-lg-6  d-flex flex-column justify-content-center" data-aos="fade-in">
         <h1>Build Your Health With <span>SComplex</span></h1>
         <p>We are team of talented designers making websites with Bootstrap</p>
         <div class="d-flex">
