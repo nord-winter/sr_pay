@@ -1,7 +1,10 @@
 
 <script>
-  import FormInfo from "./FormInfo.svelte";
   import ProgressBar from './ProgressBar.svelte';
+  import FormInfo from "./FormInfo.svelte";
+  import FormAddress from './FormAddress.svelte';
+  import FormPayment from './FormPayment.svelte';
+  import FormConfirmation from './FormConfirmation.svelte';
 
   let steps = ['Info', 'Address', 'Payment', 'Confirmation']
   let currentActive = 1;
@@ -28,26 +31,20 @@
 </script>
 
 <div class="col-md-7 col-lg-8">
-  <ProgressBar {steps} bind:currentActive bind:this={progressBar}/>
+  <ProgressBar {steps} bind:currentActive bind:this={progressBar} />
   <div class="card p-4 pt-5">
     <form class="form-container" on:submit={handleSubmit}>
       {#if currentActive === 1}
         <FormInfo />
       {/if}
       {#if currentActive === 2}
-        <div>
-          ХУЙ
-        </div>
+        <FormAddress />
       {/if}
       {#if currentActive === 3}
-        <div>
-          ХУЙ
-        </div>
+        <FormPayment />
       {/if}
       {#if currentActive === 4}
-        <div>
-          ХУЙ
-        </div>
+        <FormConfirmation />
       {/if}
       <div class="d-flex justify-content-between mt-4">
         <button
