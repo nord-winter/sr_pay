@@ -1,20 +1,20 @@
 <script>
-	export let steps = [], currentActive = 1;
+	export let steps = [], step = 1;
 	let circles, progress;
 	
 	export const handleProgress = (stepIncrement) => {
 		circles = document.querySelectorAll('.circle');
 		if(stepIncrement == 1){
-			currentActive++
+			step++
 
-			if(currentActive > circles.length) {
-					currentActive = circles.length
+			if(step > circles.length) {
+					step = circles.length
 			}
 		} else {
-			currentActive--
+			step--
 
-			if(currentActive < 1) {
-					currentActive = 1 
+			if(step < 1) {
+					step = 1 
 			}
 		}
 		
@@ -24,7 +24,7 @@
 	
 	function update() {
         circles.forEach((circle, idx) => {
-            if(idx < currentActive) {
+            if(idx < step) {
                 circle.classList.add('active')
             } else {
                 circle.classList.remove('active')
