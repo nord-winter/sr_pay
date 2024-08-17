@@ -1,6 +1,10 @@
 <script>
     import product from '$lib/images/product.png';
     import MultiStepForm from '$lib/components/MultiStepForm.svelte';
+
+
+    export let data;
+
 </script>
 
 <div class="container pt-5 pb-5">
@@ -69,7 +73,7 @@
 
 
       </div>
-      <MultiStepForm />
+      <MultiStepForm {data}/>
 
     </div>
 </div>

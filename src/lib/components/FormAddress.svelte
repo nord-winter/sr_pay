@@ -1,61 +1,57 @@
 <script>
-    let formData = {
-        address: {
-            city: 'city',
-            district: 'district',
-            province: 'province',
-            postcode: 'postcode'
-        }
-
-    }
-    let errors = {
-        info: true,
-
-    }
-
+    export let form;
+    export let errors;
 </script>
 
 <div class="step step-info">
     <h3>Address</h3>
-
     <div class="mb-3">
         <label for="city" class="form-label">City</label>
         <input
         type="text"
-        class="form-control is-invalid"
+        class="form-control {$errors.city ? 'is-invalid' : ''}"
         id="city"
-        bind:value={formData.address.city}
+        name="city"
+        bind:value={$form.city}
         />
-        {#if true}<div class="invalid-feedback">ERROR</div>{/if}
+        {#if $errors.city}<div class="invalid-feedback">{$errors.city}</div>{/if}
     </div>
     <div class="mb-3">
         <label for="district" class="form-label">District</label>
         <input
-        type="district"
-        class="form-control {true ? 'is-invalid' : ''}"
+        type="text"
+        class="form-control {$errors.district ? 'is-invalid' : ''}"
         id="district"
-        bind:value={formData.address.district}
+        name="district"
+        bind:value={$form.district}
         />
-        {#if errors.info}<div class="invalid-feedback">ERROR</div>{/if}
+        {#if $errors.district}<div class="invalid-feedback">{$errors.district}</div>{/if}
     </div>
     <div class="mb-3">
         <label for="province" class="form-label">Province</label>
         <input 
         type="text"
-        class="form-control {true ? 'is-invalid' : ''}"
+        class="form-control {$errors.province ? 'is-invalid' : ''}"
         id="province"
-        bind:value={formData.address.province}
+        name="province"
+        bind:value={$form.province}
         />
-        {#if errors.info}<div class="invalid-feedback">{errors.info}</div>{/if}
+        {#if $errors.province}<div class="invalid-feedback">{$errors.province}</div>{/if}
     </div>
     <div class="mb-3">
         <label for="postcode" class="form-label">Postcode</label>
         <input 
         type="text"
-        class="form-control {true ? 'is-invalid' : ''}"
+        class="form-control {$errors.postcode ? 'is-invalid' : ''}"
         id="postcode"
-        bind:value={formData.address.postcode}
+        name="postcode"
+        bind:value={$form.postcode}
         />
-        {#if errors.info}<div class="invalid-feedback">{errors.info}</div>{/if}
+        {#if $errors.postcode}<div class="invalid-feedback">{$errors.postcode}</div>{/if}
+    </div>
+    <div class="d-flex justify-content-between mt-4">
+        <button class="btn btn-primary">
+            Next
+        </button>
     </div>
 </div>

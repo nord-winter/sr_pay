@@ -1,134 +1,79 @@
-
 <script>
-  import ProgressBar from './ProgressBar.svelte';
-  import FormInfo from "./FormInfo.svelte";
-  import FormAddress from './FormAddress.svelte';
-  import FormPayment from './FormPayment.svelte';
-  import FormConfirmation from './FormConfirmation.svelte';
+  import FormInfo from '$lib/components/FormInfo.svelte'
+  import FormAddress from '$lib/components/FormAddress.svelte';
+  // import FormPayment from './FormPayment.svelte';
+  // import FormConfirmation from './FormConfirmation.svelte';
 
+  import {formInfoSchema, formAddressSchema} from '$lib/validation/formShema';
+  import { page } from '$app/stores';
   import { superForm } from 'sveltekit-superforms';
+  import SuperDebug from 'sveltekit-superforms';
+  import { zod } from 'sveltekit-superforms/adapters';
 
 
-  //let steps = ['Info', 'Address', 'Payment', 'Confirmation'];
-  const steps = [1, 2, 3, 4];
+  export let data;
+
+  const steps = [zod(formInfoSchema), zod(formAddressSchema)];
   let step = 1;
-  let formData = {
-      name: '',
-      email: '',
-      phone: '+66',
-	}
-  /**
-	 * @type {ProgressBar}
-	 */
-  let progressBar;
-
 
   
 
 
-  const {form, errors, message, enhance, validateForm, options} = superForm(formData, {
-
-    dataType: 'json',
-    async onSubmit({cancel}) {
-      if (step < steps.length) {
-        cancel();
-        return;
-      }
-
-      const result = await validateForm({update: true});
-
-      if(!result.valid) {
-        console.log('Миша все хуйня, давай по новой, Validation failed:', result.errors);
-        return;
-      }
-      // TODO: Отправка запроса с отправкой всех неоходимых данных в CRM после подтверждения оплаты
-      // if (step = steps.length) return; // if (validateStep())
-      console.log('FormData:', form);
-
-    },
-    async onUpdated() {
-      if (form.valid) step = 1;
-    }
-  });
-
-  const handleProgress = (/** @type {number} */ stepIncrement) => {
-    if (validateStep()) {
-      step += stepIncrement
-    }
-		progressBar.handleProgress(stepIncrement)
-	}
-	
+  $: options.validators = steps[step - 1];
 
 
-  function validateStep() {
-      switch (step) {
-          case 1:
-              return validateFormInfo();
-          case 2:
-              return validateFormAddress();
-          case 3:
-              return validateFormPayment();
-          case 4:
-              return validateFormConfirmation();
-          default:
-              return true;
-      }
-  }
+	// @ts-ignore
+	const { form, errors, message, enhance, validateForm, options } = superForm(data.form, {
+		dataType: 'json',
+		async onSubmit({ cancel }) {
+      console.log('Wtf');
+			// If on last step, make a normal request
+			if (step == steps.length) return;
 
-  function validateFormInfo() {
-    return true;
-  }
-  function validateFormAddress() {
-    return true;
-  }
-  function validateFormPayment() {
-    return true;
-  }
-  function validateFormConfirmation() {
-    return true;
-  }
+			else cancel();
+      
+			const result = await validateForm({ update: true });
 
+			if (result.valid) step = step + 1;
+
+		},
+
+		async onUpdated({ form }) {
+      step = step + 1;
+			if (form.valid) step = 1;
+		}
+	});
 
 
 </script>
+{#if $message}
+	<div class="status" class:error={$page.status >= 400} class:success={$page.status == 200}>
+		{$message}
+	</div>
+{/if}
 
 <div class="col-md-7 col-lg-8">
-  <!-- <ProgressBar {steps} bind:step bind:this={progressBar} /> -->
+  <SuperDebug data={$form} />
   <div class="card p-4 pt-5">
-    <!-- <pre>{JSON.stringify(formData)}</pre> -->
-    <form class="form-container" use:enhance>
+    <form class="form-container" method="POST" use:enhance> 
+      STEP {step};
       {#if step === 1}
-        <FormInfo bind:formData={formData} />
+        <FormInfo {form} {errors}/>
       {/if}
       {#if step === 2}
-        <FormAddress />
+        <FormAddress {form} {errors} />
       {/if}
       {#if step === 3}
-        <FormPayment />
+        <!-- <FormPayment /> -->
       {/if}
       {#if step === 4}
-        <FormConfirmation />
+        <!-- <FormConfirmation /> -->
       {/if}
       <div class="d-flex justify-content-between mt-4">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          on:click={() => handleProgress(-1)} 
-          disabled={step == 1}
-        >
-          Previous
-        </button>
-        {#if step < 4}
-        <button type="button" class="btn btn-primary"
-        on:click={() => handleProgress(+1)} 
-        disabled={step !== steps.length}>
-          Next
-        </button>
-        {/if}
         {#if step === 4}
-        <button type="submit" class="btn btn-success">
-          Submit
-        </button>
+          <button type="submit" class="btn btn-success">
+            Submit
+          </button>
         {/if}
       </div>
     </form>
