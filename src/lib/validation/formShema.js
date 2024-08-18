@@ -12,5 +12,5 @@ export const formAddressSchema = formInfoSchema.extend({
 	address: z.string().min(5),
 	district: z.string().min(5),
 	province: z.string().min(5),
-	postalCode: z.string().min(5)
+	postcode: z.string().min(5)
 });

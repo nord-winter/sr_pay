@@ -1,7 +1,7 @@
 <script>
   import FormInfo from '$lib/components/FormInfo.svelte'
   import FormAddress from '$lib/components/FormAddress.svelte';
-  // import FormPayment from './FormPayment.svelte';
+  import FormPayment from './FormPayment.svelte';
   // import FormConfirmation from './FormConfirmation.svelte';
 
   import {formInfoSchema, formAddressSchema} from '$lib/validation/formShema';
@@ -26,7 +26,29 @@
 	const { form, errors, message, enhance, validateForm, options } = superForm(data.form, {
 		dataType: 'json',
 		async onSubmit({ cancel }) {
-      console.log('Wtf');
+
+        if (step == 3) {
+        OmiseCard.configure({
+          publicKey: "pkey_test_60441fm7b49zlzbf5ni"
+        });
+
+        OmiseCard.open({
+          amount: 12345,  // Замените на сумму вашего заказа
+          currency: "THB",
+          defaultPaymentMethod: "credit_card",
+          onCreateTokenSuccess: (nonce) => {
+            if (nonce.startsWith("tokn_")) {
+              form.omiseToken.value = nonce;
+            } else {
+              form.omiseSource.value = nonce;
+            }
+            form.submit();
+          }
+        });
+
+        cancel(); // Останавливаем обычную отправку формы
+        return;
+      }
 			// If on last step, make a normal request
 			if (step == steps.length) return;
 
@@ -64,6 +86,10 @@
         <FormAddress {form} {errors} />
       {/if}
       {#if step === 3}
+       <!-- TODO: Choose product  -->
+        <input type="hidden" name="omiseToken">
+        <input type="hidden" name="omiseSource">
+        <button type="submit" id="checkoutButton">Checkout</button>
         <!-- <FormPayment /> -->
       {/if}
       {#if step === 4}
