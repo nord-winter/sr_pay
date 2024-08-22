@@ -39,6 +39,17 @@
         {#if $errors.province}<div class="invalid-feedback">{$errors.province}</div>{/if}
     </div>
     <div class="mb-3">
+        <label for="province" class="form-label">Address</label>
+        <input 
+        type="text"
+        class="form-control {$errors.address ? 'is-invalid' : ''}"
+        id="address"
+        name="address"
+        bind:value={$form.address}
+        />
+        {#if $errors.province}<div class="invalid-feedback">{$errors.province}</div>{/if}
+    </div>
+    <div class="mb-3">
         <label for="postcode" class="form-label">Postcode</label>
         <input 
         type="text"
