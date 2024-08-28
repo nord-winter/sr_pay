@@ -9,18 +9,26 @@
   import { superForm } from 'sveltekit-superforms';
   import SuperDebug from 'sveltekit-superforms';
   import { zod } from 'sveltekit-superforms/adapters';
-  // import { enhance } from '$app/forms';
+
 
 
   export let data;
-  let total = 1000;
-  const CURRENCY_TYPE = 'THB';
-  let payload;
-
-  const steps = [zod(formInfoSchema), zod(formAddressSchema)];
-  let step = 3;
-
   
+  // export let selectedProduct;
+  const CURRENCY_TYPE = 'THB';
+
+
+  let total = 1000;
+  let payload;
+  let stepik = false;
+  let step = 1;
+  let product = null;
+  
+
+  const steps = [zod(formInfoSchema), zod(formAddressSchema), 3, 4];
+  
+
+
 
 
   $: options.validators = steps[step - 1];
@@ -58,43 +66,38 @@
 		dataType: 'json',
 		async onSubmit({ cancel, customRequest }) {
 
-        if (step == 3) {
-          OmiseCard.configure({
-            publicKey: "pkey_test_60441fm7b49zlzbf5ni"
-          });
+      if (step == 3) {
+        OmiseCard.configure({
+          publicKey: "pkey_test_60441fm7b49zlzbf5ni"
+        });
 
-
-          OmiseCard.open({
-            amount: total * 100, 
-            currency: CURRENCY_TYPE,
-            defaultPaymentMethod: "credit_card",
-            otherPaymentMethods: "promptpay, truemoney",
-            onCreateTokenSuccess: (nonce) => {
-              // console.log('token creation done', nonce)
-              if (nonce.startsWith("tokn_")) {
-                payload = {
-                  omiseToken: nonce,
-                  amount: total *100,
-                  ...$form
-                }
-                //$form.omiseToken = nonce;
-              } else {
-                payload = {
-                  omiseSource: nonce,
-                  amount: total *100,
-                  ...$form
-                }
-                // $form.omiseSource = nonce;
+        OmiseCard.open({
+          amount: total * 100, 
+          currency: CURRENCY_TYPE,
+          defaultPaymentMethod: "credit_card",
+          otherPaymentMethods: "promptpay, truemoney",
+          onCreateTokenSuccess: (nonce) => {
+            if (nonce.startsWith("tokn_")) {
+              payload = {
+                omiseToken: nonce,
+                amount: total *100,
+                ...$form
               }
-            // @ts-ignore
-            customRequest(processPayment(payload));
+            } else {
+              payload = {
+                omiseSource: nonce,
+                amount: total *100,
+                ...$form
+              }
             }
-          });
+          // @ts-ignore
+          customRequest(processPayment(payload));
+          }
+        });
         
-        cancel(); // Останавливаем обычную отправку формы
+        cancel();
         return;
       }
-			// If on last step, make a normal request
 			if (step == steps.length) return;
 
 			else cancel();
@@ -109,9 +112,8 @@
 			if (form.valid) step = 1;
 		}
 	});
-
-
 </script>
+
 {#if $message}
 	<div class="status" class:error={$page.status >= 400} class:success={$page.status == 200}>
 		{$message}
@@ -122,7 +124,6 @@
   <SuperDebug data={$form} />
   <div class="card p-4 pt-5">
     <form class="form-container" method="POST" use:enhance> 
-      STEP {step};
       {#if step === 1}
         <FormInfo {form} {errors}/>
       {/if}
@@ -130,14 +131,9 @@
         <FormAddress {form} {errors} />
       {/if}
       {#if step === 3}
-       <!-- TODO: Choose product  -->
         <input type="hidden" name="omiseToken">
         <input type="hidden" name="omiseSource">
         <button type="submit" id="checkoutButton" class="btn btn-success">Checkout</button>
-        <!-- <FormPayment /> -->
-      {/if}
-      {#if step === 4}
-        <!-- <FormConfirmation /> -->
       {/if}
       <div class="d-flex justify-content-between mt-4">
         {#if step === 4}

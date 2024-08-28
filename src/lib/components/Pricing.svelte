@@ -1,83 +1,105 @@
 <script>
 
+    import { goto } from '$app/navigation';
+    import { selectedProduct } from '../../stores';
+
+	import photoFirstSet from '$lib/images/set_1.png';
+	import photoSecondSet from '$lib/images/set_2.png';
+	import photoThirdSet from '$lib/images/set_3.png';
+
+    
+
+	const prices = {
+		firstSet: {
+            id: '1',
+            count: '1',
+			price: '1690',
+			noDiscount: '2190'
+		},
+		secondSet: {
+            id: '2',
+            count: '3',
+			price: '3590',
+			noDiscount: '5070'
+		},
+		thirdSet: {
+            id: '3',
+            count: '5',
+			price: '4990',
+			noDiscount: '8450'
+		}
+	};
+
+
+
+    function selectProduct(product) {
+        selectedProduct.set(product);
+        goto('/checkout');
+    }
 </script>
 
 <section id="pricing" class="pricing section">
+	<!-- Section Title -->
+	<div class="container section-title" data-aos="fade-up">
+		<h2>Pricing</h2>
+		<div><span>Check Our</span> <span class="description-title">Pricing</span></div>
+	</div>
+	<!-- End Section Title -->
 
-    <!-- Section Title -->
-    <div class="container section-title" data-aos="fade-up">
-    <h2>Pricing</h2>
-    <div><span>Check Our</span> <span class="description-title">Pricing</span></div>
-    </div><!-- End Section Title -->
+	<div class="container">
+		<div class="row gy-4">
+			<div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
+				<div class="pricing-item">
+					<h3>1 Bottle</h3>
+					<div class="d-flex justify-content-center align-items-center flex-column">
+						<h5 class="info">30-day supply</h5>
+						<h4><sup>฿</sup>{prices.firstSet.price}<span> / Bottle</span></h4>
+						<img src={photoFirstSet} class="mx-auto d-block" alt="alt" style="width: 200px;" />
+						<button on:click={() => selectProduct(prices.firstSet)} class="cta-btn">Buy now</button>
+					</div>
+                    <div class="text-center">
 
-    <div class="container">
+                        <p class="secondary"><s>{prices.firstSet.noDiscount}</s></p>
+						<p class="h3"><span class="badge bg-danger">{prices.firstSet.price}</span></p>
+                    </div>
+				</div>
+			</div>
+			<div class="col-lg-4" data-aos="zoom-in" data-aos-delay="200">
+				<div class="pricing-item featured">
+					<p class="popular">Popular</p>
+					<h3>3 Bottle</h3>
+					<div class="d-flex justify-content-center align-items-center flex-column">
+						<h5 class="info">90-day supply</h5>
+						<h4><sup>฿</sup>{prices.secondSet.price}<span> / Bottle</span></h4>
+						<img src={photoSecondSet} class="mx-auto d-block" alt="alt" style="width: 200px;" />
+						<button on:click={() => selectProduct(prices.secondSet)} class="cta-btn">Buy now</button>
+					</div>
 
-    <div class="row gy-4">
+					<ul>
+						<li><i class="bi bi-check"></i> <span>{prices.secondSet.price}</span></li>
+						<li class="na"><i class="bi bi-x"></i> <span>{prices.secondSet.noDiscount}</span></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
+				<div class="pricing-item">
+					<h3>5 Bottle</h3>
+					<div class="d-flex justify-content-center align-items-center flex-column">
+						<h5 class="info">180-day supply</h5>
+						<h4><sup>฿</sup>{prices.thirdSet.price}<span> / Bottle</span></h4>
+						<img src={photoThirdSet} class="mx-auto d-block" alt="alt" style="width: 200px;" />
+						<button on:click={() => selectProduct(prices.thirdSet)} class="cta-btn">Buy now</button>
+					</div>
 
-        <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
-        <div class="pricing-item">
-            <h3>Free Plan</h3>
-            <p class="description">Ullam mollitia quasi nobis soluta in voluptatum et sint palora dex strater</p>
-            <h4><sup>$</sup>0<span> / month</span></h4>
-            <a href="#" class="cta-btn">Start a free trial</a>
-            <p class="text-center small">No credit card required</p>
-            <ul>
-            <li><i class="bi bi-check"></i> <span>Quam adipiscing vitae proin</span></li>
-            <li><i class="bi bi-check"></i> <span>Nec feugiat nisl pretium</span></li>
-            <li><i class="bi bi-check"></i> <span>Nulla at volutpat diam uteera</span></li>
-            <li class="na"><i class="bi bi-x"></i> <span>Pharetra massa massa ultricies</span></li>
-            <li class="na"><i class="bi bi-x"></i> <span>Massa ultricies mi quis hendrerit</span></li>
-            <li class="na"><i class="bi bi-x"></i> <span>Voluptate id voluptas qui sed aperiam rerum</span></li>
-            <li class="na"><i class="bi bi-x"></i> <span>Iure nihil dolores recusandae odit voluptatibus</span></li>
-            </ul>
-        </div>
-        </div><!-- End Pricing Item -->
-
-        <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="200">
-        <div class="pricing-item featured">
-            <p class="popular">Popular</p>
-            <h3>Business Plan</h3>
-            <p class="description">Ullam mollitia quasi nobis soluta in voluptatum et sint palora dex strater</p>
-            <h4><sup>$</sup>29<span> / month</span></h4>
-            <a href="#" class="cta-btn">Start a free trial</a>
-            <p class="text-center small">No credit card required</p>
-            <ul>
-            <li><i class="bi bi-check"></i> <span>Quam adipiscing vitae proin</span></li>
-            <li><i class="bi bi-check"></i> <span>Nec feugiat nisl pretium</span></li>
-            <li><i class="bi bi-check"></i> <span>Nulla at volutpat diam uteera</span></li>
-            <li><i class="bi bi-check"></i> <span>Pharetra massa massa ultricies</span></li>
-            <li><i class="bi bi-check"></i> <span>Massa ultricies mi quis hendrerit</span></li>
-            <li><i class="bi bi-check"></i> <span>Voluptate id voluptas qui sed aperiam rerum</span></li>
-            <li class="na"><i class="bi bi-x"></i> <span>Iure nihil dolores recusandae odit voluptatibus</span></li>
-            </ul>
-        </div>
-        </div><!-- End Pricing Item -->
-
-        <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
-        <div class="pricing-item">
-            <h3>Developer Plan</h3>
-            <p class="description">Ullam mollitia quasi nobis soluta in voluptatum et sint palora dex strater</p>
-            <h4><sup>$</sup>49<span> / month</span></h4>
-            <a href="#" class="cta-btn">Start a free trial</a>
-            <p class="text-center small">No credit card required</p>
-            <ul>
-            <li><i class="bi bi-check"></i> <span>Quam adipiscing vitae proin</span></li>
-            <li><i class="bi bi-check"></i> <span>Nec feugiat nisl pretium</span></li>
-            <li><i class="bi bi-check"></i> <span>Nulla at volutpat diam uteera</span></li>
-            <li><i class="bi bi-check"></i> <span>Pharetra massa massa ultricies</span></li>
-            <li><i class="bi bi-check"></i> <span>Massa ultricies mi quis hendrerit</span></li>
-            <li><i class="bi bi-check"></i> <span>Voluptate id voluptas qui sed aperiam rerum</span></li>
-            <li><i class="bi bi-check"></i> <span>Iure nihil dolores recusandae odit voluptatibus</span></li>
-            </ul>
-        </div>
-        </div><!-- End Pricing Item -->
-
-    </div>
-
-    </div>
-
+					<ul>
+						<li><i class="bi bi-check"></i> <span>{prices.thirdSet.price}</span></li>
+						<li class="na"><i class="bi bi-x"></i> <span>{prices.thirdSet.noDiscount}</span></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 
 <style>
-
 </style>

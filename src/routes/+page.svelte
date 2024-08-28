@@ -10,10 +10,10 @@
 
 
 <Hero />
+<Pricing />
 <AboutUs />
 <Stats />
 <Reviews />
-<Pricing />
 <Faq />
 <Contact />
 

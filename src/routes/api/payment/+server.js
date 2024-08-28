@@ -1,17 +1,32 @@
+import omiseModule from 'omise';
+import { SECRET_KEY } from '$env/static/private';
+
+const omise = omiseModule({
+	secretKey: SECRET_KEY
+});
+
+const SR_COMPANY_ID = '54';
+const SR_API_TOKEN =
+	'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2RlLmJhY2tlbmQuc2FsZXNyZW5kZXIuY29tLyIsImF1ZCI6IkNSTSIsImp0aSI6ImUzMjhhMjkwMTZhMDRhODQ5NDRiZGFlOWE3ZDM2ZDQxIiwiaWF0IjoxNzIxMTkyMTE4LCJ0eXBlIjoiYXBpIiwiY2lkIjoiNTQiLCJyZWYiOnsiYWxpYXMiOiJBUEkiLCJpZCI6IjIifX0.3TrkHOL42Z9c_flGBuPi8nymoSQk2Hm39-NbUuRUsxA';
+const SR_STATUS_ID = '19';
+const SR_PROJECT_ID = '3';
+
 export async function POST({ request }) {
 	try {
-
 		const payload = await request.json();
 
 		const paymentResult = await processPayment(payload);
-		console.log(payload);
+		const srApiResponse = await salesRenderApi(payload);
 
-		if (paymentResult.success) {
+		if (paymentResult.success && srApiResponse.success) {
 			return new Response(
 				JSON.stringify({
 					success: true,
-					message: 'Payment processed successfully',
-					data: paymentResult.data
+					message: 'Payment and CRM processing successfully completed',
+					data: {
+						paymentData: paymentResult.data,
+						srApiData: srApiResponse.data
+					}
 				}),
 				{ status: 200 }
 			);
@@ -19,8 +34,11 @@ export async function POST({ request }) {
 			return new Response(
 				JSON.stringify({
 					success: false,
-					message: 'Payment processing failed',
-					error: paymentResult.error
+					message: 'Payment or CRM processing failed',
+					error: {
+						paymentError: paymentResult.error,
+						srApiError: srApiResponse.error
+					}
 				}),
 				{ status: 400 }
 			);
@@ -33,13 +51,120 @@ export async function POST({ request }) {
 	}
 }
 
-
 async function processPayment(payload) {
-	if (payload.amount > 0 && payload.omiseSource) {
-		return { success: true, data: { transactionId: '123456', amount: payload.amount } };
-	} 	else if (payload.amount > 0 && payload.omiseToken) {
-		return { success: true, data: { transactionId: '123456', amount: payload.amount } };
+	if (payload.amount > 0 && payload.omiseToken) {
+		const charge = await omise.charges.create({
+			amount: payload.amount,
+			currency: 'THB',
+			card: payload.omiseToken
+		});
+
+		return {
+			success: true,
+			data: { transactionId: charge.id, amount: payload.amount, charge: charge }
+		};
+	} else if (payload.amount > 0 && payload.omiseSource) {
+		const charge = await omise.charges.create({
+			amount: payload.amount,
+			currency: 'THB',
+			source: payload.omiseSource
+		});
+		return {
+			success: true,
+			data: { transactionId: charge.id, amount: payload.amount, charge: charge }
+		};
 	} else {
 		return { success: false, error: 'Invalid payment details' };
+	}
+}
+
+async function salesRenderApi(payload) {
+	try {
+		const query = `
+			mutation ($input: AddOrderInput!) {
+				orderMutation {
+					addOrder(input: $input) {
+						id
+					}
+				}
+			}
+		`;
+
+		const variables = {
+			input: {
+				statusId: SR_STATUS_ID,
+				projectId: SR_PROJECT_ID,
+				orderData: {
+					humanNameFields: [
+						{
+							field: 'name1', // your name field ID
+							value: {
+								firstName: payload.name || '',
+								lastName: '' // If you have a lastName, populate it here
+							}
+						}
+					],
+					phoneFields: [
+						{
+							field: 'phone', // your phone field ID
+							value: payload.phone || ''
+						}
+					],
+					addressFields: [
+						{
+							field: 'adress', // your address field ID
+							value: {
+								postcode: payload.postcode || '',
+								region: payload.province || '',
+								city: payload.district || '',
+								address_1: payload.address || ''
+							}
+						}
+					]
+				},
+				cart: {
+					items: [
+						{
+							itemId: parseInt(payload.combo, 10),
+							quantity: 1,
+							variation: 1,
+							price: parseInt(payload.price, 10) || 0
+						}
+					]
+				},
+				source: {
+					refererUri: payload.refererUri || '',
+					ip: payload.ip || ''
+				}
+			}
+		};
+
+		// Используйте fetch или любой другой HTTP клиент для отправки данных в CRM
+		const response = await fetch(
+			'https://de.backend.salesrender.com/companies/' +
+				SR_COMPANY_ID +
+				'/CRM?token=' +
+				SR_API_TOKEN,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					query,
+					variables
+				})
+			}
+		);
+
+		const result = await response.json();
+
+		if (result.errors) {
+			throw new Error('CRM Error: ' + JSON.stringify(result.errors));
+		}
+
+		return { success: true, data: result.data };
+	} catch (error) {
+		return { success: false, error: error.message };
 	}
 }
