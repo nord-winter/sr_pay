@@ -1,32 +1,119 @@
 <script>
 	// @ts-nocheck
-	import productPhoto from '$lib/images/product.png';
-	import MultiStepForm from '$lib/components/MultiStepForm.svelte';
-	import { selectedProduct } from '../../stores';
 
+	import FormInfo from '$lib/components/FormInfo.svelte';
+	import FormAddress from '$lib/components/FormAddress.svelte';
+
+	import { selectedProduct } from '../../stores';
+	import { formInfoSchema, formAddressSchema } from '$lib/validation/formShema';
+	import { page } from '$app/stores';
+	import { superForm } from 'sveltekit-superforms';
+	import { zod } from 'sveltekit-superforms/adapters';
+    import SuperDebug from 'sveltekit-superforms';
+
+	import productPhoto from '$lib/images/product.png';
 	import photoFirstSet from '$lib/images/set_1.png';
 	import photoSecondSet from '$lib/images/set_2.png';
 	import photoThirdSet from '$lib/images/set_3.png';
 
 	export let data;
 
-	/**
-	 * @type {{ id: any; price: any; } | null}
-	 */
-	let product;
+	const CURRENCY_TYPE = 'THB';
+	const steps = [zod(formInfoSchema), zod(formAddressSchema), 3];
+	const { form, errors, message, enhance, validateForm, options } = superForm(data.form, {
+		dataType: 'json',
+		async onSubmit({ cancel, customRequest }) {
+			if (step == steps.length) {
+				// TODO: processPayment
+				console.log(data.form);
+				return;
+			} else cancel();
+
+			const result = await validateForm({ update: true });
+
+			if (result.valid) step = step + 1;
+		},
+
+		async onUpdated({ form }) {
+			if (form.valid) step = 1;
+		}
+	});
+
+	const images = {
+		'38': photoFirstSet,
+		'37': photoSecondSet,
+		'36': photoThirdSet
+	};
+
+	let payload;
+	let step = 1;
+	let product = null;
+	let isPayButtonEnabled = false;
 
 	selectedProduct.subscribe((value) => {
 		product = value;
 	});
-	console.log(product);
-
-	const images = {
-		'1': photoFirstSet,
-		'2': photoSecondSet,
-		'3': photoThirdSet
-	};
 
 	$: selectedImage = product ? images[product.id] : '';
+	$: options.validators = steps[step - 1];
+	$: isPayButtonEnabled = step === 3 && document.getElementById('CheckPolicy').checked;
+
+	function handlePayment() {
+		OmiseCard.configure({
+			publicKey: 'pkey_test_60441fm7b49zlzbf5ni'
+		});
+
+		OmiseCard.open({
+			amount: product.price * 100,
+			currency: CURRENCY_TYPE,
+			defaultPaymentMethod: 'credit_card',
+			otherPaymentMethods: 'promptpay, truemoney',
+			onCreateTokenSuccess: (nonce) => {
+				if (nonce.startsWith('tokn_')) {
+					payload = {
+						omiseToken: nonce,
+						amount: product.price * 100,
+						productId: product.id,
+						...$form
+					};
+				} else {
+					payload = {
+						omiseSource: nonce,
+						amount: product.price * 100,
+						productId: product.id,
+						...$form
+					};
+				}
+				processPayment(payload);
+			}
+		});
+	}
+	/**
+	 * @param {any} payload
+	 */
+	async function processPayment(payload) {
+		try {
+			const response = await fetch('/api/payment', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			});
+
+			if (response.ok) {
+				const result = response.json();
+				console.log('Payment Successful:', result);
+				return response;
+			} else {
+				return response;
+				console.error('Payment Failed:', response.status);
+			}
+		} catch (error) {
+			return error;
+			console.error('Error:', error);
+		}
+	}
 </script>
 
 <div class="container pt-5 pb-5">
@@ -69,7 +156,9 @@
 					<div class="row">
 						<div class="col text-end">
 							<div class="h6 text-body-tertiary">
-								<strong>฿<s>{Number(product.noDiscount) / Number(product.count)}</s></strong>
+								<strong
+									>฿<s>{Math.round(Number(product.noDiscount) / Number(product.count))}</s></strong
+								>
 							</div>
 						</div>
 					</div>
@@ -77,7 +166,7 @@
 						<div class="col text-start">รวม</div>
 						<div class="col text-end">
 							<div class="h6">
-								<strong>฿{Number(product.price) / Number(product.count)}</strong>
+								<strong>฿{Math.round(Number(product.price) / Number(product.count))}</strong>
 							</div>
 						</div>
 					</div>
@@ -101,16 +190,67 @@
 						</div>
 					</div>
 				</div>
-
-				<div class="form-check p-4">
-					<input class="form-check-input" type="checkbox" value="" id="CheckPolicy" />
-					<label class="form-check-label" for="CheckPolicy">
-						ฉันยอมรับ <a href="#">ข้อตกลงและเงื่อนไข</a> และ <a href="#">นโยบายความเป็นส่วนตัว</a>
-					</label>
-				</div>
-				<button type="button" class="btn btn-primary btn-lg">Large button</button>
+				<form action="">
+					<div class="form-check p-4">
+						<input
+							class="form-check-input"
+							type="checkbox"
+							value=""
+							id="CheckPolicy"
+							on:change={() =>
+								(isPayButtonEnabled = step === 3 && document.getElementById('CheckPolicy').checked)}
+						/>
+						<label class="form-check-label" for="CheckPolicy">
+							ฉันยอมรับ <a href="#">ข้อตกลงและเงื่อนไข</a> และ <a href="#">นโยบายความเป็นส่วนตัว</a>
+						</label>
+					</div>
+					<input type="hidden" name="omiseToken" />
+					<input type="hidden" name="omiseSource" />
+					<button
+						type="button"
+						id="checkoutButton"
+						class="btn btn-primary btn-lg"
+						disabled={!isPayButtonEnabled}
+						on:click={handlePayment}>Pay</button
+					>
+				</form>
 			</div>
 		</div>
-		<MultiStepForm {data} />
+
+		<div class="col-md-7 col-lg-8">
+			{#if $message}
+				<div class="status" class:error={$page.status >= 400} class:success={$page.status == 200}>
+					{$message}
+				</div>
+			{/if}
+			<SuperDebug data={$form} />
+			<div class="card p-4 pt-5">
+				<form class="form-container" method="POST" use:enhance>
+					{#if step === 1}
+						<FormInfo {form} {errors} />
+					{/if}
+					{#if step === 2}
+						<FormAddress {form} {errors} />
+					{/if}
+					{#if step === 3}
+						<div>
+							<h3>Детали заказа:</h3>
+							<ul>
+								<li><strong>Name:</strong> {$form.name}</li>
+								<li><strong>Email:</strong> {$form.email}</li>
+								<li><strong>Phone:</strong> {$form.phone}</li>
+								<li><strong>City:</strong> {$form.city}</li>
+								<li><strong>Address:</strong> {$form.address}</li>
+								<li><strong>District:</strong> {$form.district}</li>
+								<li><strong>Province:</strong> {$form.province}</li>
+								<li><strong>Poastcode:</strong> {$form.postcode}</li>
+							</ul>
+						</div>
+					{/if}
+				</form>
+			</div>
+		</div>
+
+		<!-- <MultiStepForm {data} /> -->
 	</div>
 </div>

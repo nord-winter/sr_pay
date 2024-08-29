@@ -14,9 +14,10 @@ const SR_PROJECT_ID = '3';
 export async function POST({ request }) {
 	try {
 		const payload = await request.json();
-
+		console.log(payload);
 		const paymentResult = await processPayment(payload);
 		const srApiResponse = await salesRenderApi(payload);
+
 
 		if (paymentResult.success && srApiResponse.success) {
 			return new Response(
@@ -139,7 +140,7 @@ async function salesRenderApi(payload) {
 			}
 		};
 
-		// Используйте fetch или любой другой HTTP клиент для отправки данных в CRM
+		// HTTP клиент для отправки данных в CRM
 		const response = await fetch(
 			'https://de.backend.salesrender.com/companies/' +
 				SR_COMPANY_ID +

@@ -11,19 +11,19 @@
 
 	const prices = {
 		firstSet: {
-            id: '1',
+            id: '36',
             count: '1',
 			price: '1690',
 			noDiscount: '2190'
 		},
 		secondSet: {
-            id: '2',
+            id: '37',
             count: '3',
 			price: '3590',
 			noDiscount: '5070'
 		},
 		thirdSet: {
-            id: '3',
+            id: '38',
             count: '5',
 			price: '4990',
 			noDiscount: '8450'
