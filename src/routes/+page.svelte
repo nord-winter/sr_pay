@@ -15,7 +15,7 @@
 <Stats />
 <Reviews />
 <Faq />
-<Contact />
+<!-- <Contact /> -->
 
   <!-- Preloader -->
 <!-- <div id="preloader"></div> -->

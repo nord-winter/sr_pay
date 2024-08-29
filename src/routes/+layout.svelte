@@ -7,6 +7,7 @@
     import '$lib/vendor/glightbox/css/glightbox.min.css';
     import '$lib/vendor/swiper/swiper-bundle.min.css';
     import '$lib/vendor/theme-bootlander/main.css';
+    import '$lib/vendor/custom/style.css';
 
     import {onMount} from 'svelte'
 
