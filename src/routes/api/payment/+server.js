@@ -15,20 +15,22 @@ export async function POST({ request }) {
 	try {
 		const payload = await request.json();
 
+		const headers = request.headers;
+		
+		const refererUri = headers.get('referer');
 
-		// @ts-ignore
-		const ip =
-			// @ts-ignore
-			request.headers['x-forwarded-for'] ||
-			// @ts-ignore
-			request.headers['x-real-ip'] ||
-			// @ts-ignore
-			request.socket?.remoteAddress ||
-			'';
-		payload.ip = ip;
-		// @ts-ignore
-		payload.refererUri = request.headers.referer || '';
-		console.log(payload);
+		const forwardedFor = headers.get('x-forwarded-for');
+		const realIp = headers.get('x-real-ip');
+		const socketIp = request.socket?.remoteAddress || '';
+
+		const ip = forwardedFor?.split(',').shift().trim() || realIp || socketIp || '';
+
+
+		payload.ip = socketIp;
+		payload.refererUri = refererUri;
+
+		console.log(request);
+
 		const paymentResult = await processPayment(payload);
 		const srApiResponse = await salesRenderApi(payload);
 

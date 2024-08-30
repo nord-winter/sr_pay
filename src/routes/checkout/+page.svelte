@@ -9,7 +9,6 @@
 	import { page } from '$app/stores';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
-    import SuperDebug from 'sveltekit-superforms';
 
 	import productPhoto from '$lib/images/product.png';
 	import photoFirstSet from '$lib/images/set_1.png';
@@ -222,7 +221,6 @@
 					{$message}
 				</div>
 			{/if}
-			<SuperDebug data={$form} />
 			<div class="card p-4 pt-5">
 				<form class="form-container" method="POST" use:enhance>
 					{#if step === 1}

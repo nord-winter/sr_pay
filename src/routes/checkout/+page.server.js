@@ -1,24 +1,41 @@
-import { superValidate, message } from 'sveltekit-superforms';
 import { fail } from '@sveltejs/kit';
-import { zod } from 'sveltekit-superforms/adapters';
-import {formAddressSchema as lastStep} from '$lib/validation/formShema.js';
-
+import { z } from 'zod';
+import { formAddressSchema as lastStep } from '$lib/validation/formShema.js';
 
 export const load = async () => {
-    
-	const form = await superValidate(zod(lastStep));
+	const form = {
+		// Инициализация пустыми значениями или значениями по умолчанию
+		name: '',
+		email: '',
+		phone: '',
+		city: '',
+		address: '',
+		district: '',
+		province: '',
+		postcode: ''
+	};
 
 	return { form };
 };
 
 export const actions = {
 	default: async ({ request }) => {
+		const formData = Object.fromEntries(await request.formData());
 
-		
-		const form = await superValidate(request, zod(lastStep));
+		// Валидация с использованием zod
+		const validationResult = lastStep.safeParse(formData);
 
-		if (!form.valid) return fail(400, { form });
+		if (!validationResult.success) {
+			const errors = validationResult.error.flatten().fieldErrors;
+			return fail(400, { form: formData, errors });
+		}
 
-		return message(form, 'Form posted successfully!');
+		return {
+			status: 200,
+			body: {
+				form: formData,
+				message: 'Form posted successfully!'
+			}
+		};
 	}
 };
