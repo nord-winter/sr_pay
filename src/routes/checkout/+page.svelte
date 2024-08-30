@@ -24,8 +24,7 @@
 		dataType: 'json',
 		async onSubmit({ cancel, customRequest }) {
 			if (step == steps.length) {
-				// TODO: processPayment
-				console.log(data.form);
+                
 				return;
 			} else cancel();
 

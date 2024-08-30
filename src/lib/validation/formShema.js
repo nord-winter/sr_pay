@@ -3,7 +3,8 @@ import {z } from 'zod';
 export const formInfoSchema = z.object({
 	name: z.string().min(2),
 	email: z.string().email(),
-	phone: z.string().regex( /^\+66\(\d{2}\)\d{3}-\d{2}-\d{2}$/)
+	phone: z.string().regex(/^\+66\d{9}$/) 
+
 });
 
 export const formAddressSchema = formInfoSchema.extend({

@@ -14,10 +14,23 @@ const SR_PROJECT_ID = '3';
 export async function POST({ request }) {
 	try {
 		const payload = await request.json();
+
+
+		// @ts-ignore
+		const ip =
+			// @ts-ignore
+			request.headers['x-forwarded-for'] ||
+			// @ts-ignore
+			request.headers['x-real-ip'] ||
+			// @ts-ignore
+			request.socket?.remoteAddress ||
+			'';
+		payload.ip = ip;
+		// @ts-ignore
+		payload.refererUri = request.headers.referer || '';
 		console.log(payload);
 		const paymentResult = await processPayment(payload);
 		const srApiResponse = await salesRenderApi(payload);
-
 
 		if (paymentResult.success && srApiResponse.success) {
 			return new Response(
@@ -81,6 +94,9 @@ async function processPayment(payload) {
 
 async function salesRenderApi(payload) {
 	try {
+
+		payload.phone = formatPhoneNumber(payload.phone);
+
 		const query = `
 			mutation ($input: AddOrderInput!) {
 				orderMutation {
@@ -98,16 +114,16 @@ async function salesRenderApi(payload) {
 				orderData: {
 					humanNameFields: [
 						{
-							field: 'name1', // your name field ID
+							field: 'name1',
 							value: {
 								firstName: payload.name || '',
-								lastName: '' // If you have a lastName, populate it here
+								lastName: '' 
 							}
 						}
 					],
 					phoneFields: [
 						{
-							field: 'phone', // your phone field ID
+							field: 'phone',
 							value: payload.phone || ''
 						}
 					],
@@ -126,7 +142,7 @@ async function salesRenderApi(payload) {
 				cart: {
 					items: [
 						{
-							itemId: parseInt(payload.combo, 10),
+							itemId: parseInt(payload.productId, 10),
 							quantity: 1,
 							variation: 1,
 							price: parseInt(payload.price, 10) || 0
@@ -168,4 +184,16 @@ async function salesRenderApi(payload) {
 	} catch (error) {
 		return { success: false, error: error.message };
 	}
+}
+
+function formatPhoneNumber(phone) {
+	
+	if (phone.startsWith('+66')) {
+		
+		phone = phone.slice(3);
+
+		
+		return '0' + phone;
+	}
+	return phone;
 }
