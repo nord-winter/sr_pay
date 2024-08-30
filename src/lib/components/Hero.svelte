@@ -17,11 +17,11 @@
         </div>
 
         <div class="col-lg-6  d-flex flex-column justify-content-center" data-aos="fade-in">
-        <h1>Build Your Health With <span>SComplex</span></h1>
-        <p>We are team of talented designers making websites with Bootstrap</p>
+        <h1>โปรโมชั่นราคาพิเศษมีจำนวนจำกัด</h1>
+        <p>มีเสน่ห์ อ่อนวัย สไตล์ตัวแม่</p>
         <div class="d-flex">
-            <a href="#about">
-                <button type="button" class="btn-get-started btn btn-primary btn-lg px-4 me-md-2" on:click={goToCheckout}>Оформить заказ</button>
+            <a href="#pricing">
+                <button type="button" class="btn-get-started btn btn-primary btn-lg px-4 me-md-2" >สั่งซื้อ S-Complex</button>
             </a>
         </div>
         </div>

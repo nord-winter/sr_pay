@@ -41,8 +41,8 @@
 <section id="pricing" class="pricing section">
 	<!-- Section Title -->
 	<div class="container section-title" data-aos="fade-up">
-		<h2>Pricing</h2>
-		<div><span>Check Our</span> <span class="description-title">Pricing</span></div>
+		<h2>รายการสินค้า</h2>
+		<div><span class="description-title">โปรโมชั่นพิเศษ</span></div>
 	</div>
 	<!-- End Section Title -->
 
@@ -50,12 +50,12 @@
 		<div class="row gy-4">
 			<div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
 				<div class="pricing-item">
-					<h3>1 Bottle</h3>
+					<h3>1 กล่อง</h3>
 					<div class="d-flex justify-content-center align-items-center flex-column">
 						<h5 class="info">30-day supply</h5>
-						<h4><sup>฿</sup>{prices.firstSet.price}<span> / Bottle</span></h4>
+						<h4><sup>฿</sup>{prices.firstSet.price}<span> / กล่อง</span></h4>
 						<img src={photoFirstSet} class="mx-auto d-block" alt="alt" style="width: 200px;" />
-						<button on:click={() => selectProduct(prices.firstSet)} class="cta-btn">Buy now</button>
+						<button on:click={() => selectProduct(prices.firstSet)} class="cta-btn">สั่งซื้อ</button>
 					</div>
                     <div class="text-center">
 
@@ -66,13 +66,13 @@
 			</div>
 			<div class="col-lg-4" data-aos="zoom-in" data-aos-delay="200">
 				<div class="pricing-item featured">
-					<p class="popular">Popular</p>
-					<h3>3 Bottle</h3>
+					<p class="popular">ขายดี</p>
+					<h3>3 กล่อง</h3>
 					<div class="d-flex justify-content-center align-items-center flex-column">
 						<h5 class="info">90-day supply</h5>
-						<h4><sup>฿</sup>{prices.secondSet.price}<span> / Bottle</span></h4>
+						<h4><sup>฿</sup>{prices.secondSet.price}<span> / กล่อง</span></h4>
 						<img src={photoSecondSet} class="mx-auto d-block" alt="alt" style="width: 200px;" />
-						<button on:click={() => selectProduct(prices.secondSet)} class="cta-btn">Buy now</button>
+						<button on:click={() => selectProduct(prices.secondSet)} class="cta-btn">สั่งซื้อ</button>
 					</div>
 
 					<ul>
@@ -83,12 +83,12 @@
 			</div>
 			<div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
 				<div class="pricing-item">
-					<h3>5 Bottle</h3>
+					<h3>5 กล่อง</h3>
 					<div class="d-flex justify-content-center align-items-center flex-column">
 						<h5 class="info">180-day supply</h5>
-						<h4><sup>฿</sup>{prices.thirdSet.price}<span> / Bottle</span></h4>
+						<h4><sup>฿</sup>{prices.thirdSet.price}<span> / กล่อง</span></h4>
 						<img src={photoThirdSet} class="mx-auto d-block" alt="alt" style="width: 200px;" />
-						<button on:click={() => selectProduct(prices.thirdSet)} class="cta-btn">Buy now</button>
+						<button on:click={() => selectProduct(prices.thirdSet)} class="cta-btn">สั่งซื้อ</button>
 					</div>
 
 					<ul>
