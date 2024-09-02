@@ -10,6 +10,8 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 
+	import { goto } from '$app/navigation';
+
 	import productPhoto from '$lib/images/product.png';
 	import photoFirstSet from '$lib/images/set_1.png';
 	import photoSecondSet from '$lib/images/set_2.png';
@@ -17,13 +19,16 @@
 
 	export let data;
 
+	if (!selectedProduct) {
+		goto('/');
+	}
+
 	const CURRENCY_TYPE = 'THB';
 	const steps = [zod(formInfoSchema), zod(formAddressSchema), 3];
 	const { form, errors, message, enhance, validateForm, options } = superForm(data.form, {
 		dataType: 'json',
 		async onSubmit({ cancel, customRequest }) {
 			if (step == steps.length) {
-                
 				return;
 			} else cancel();
 
@@ -38,9 +43,9 @@
 	});
 
 	const images = {
-		'38': photoFirstSet,
+		'36': photoFirstSet,
 		'37': photoSecondSet,
-		'36': photoThirdSet
+		'38': photoThirdSet
 	};
 
 	let payload;
@@ -117,17 +122,17 @@
 <div class="container pt-5 pb-5">
 	<div class="py-5 text-center">
 		<h2>Checkout form</h2>
-		<p class="lead">
+		<!-- <p class="lead">
 			Below is an example form built entirely with Bootstrap’s form controls. Each required form
 			group has a validation state that can be triggered by attempting to submit the form without
 			completing it.
-		</p>
+		</p> -->
 		<!-- TODO Progress bar -->
 	</div>
 	<div class="row g-5">
 		<div class="col-md-5 col-lg-4 order-md-last">
 			<h4 class="d-flex justify-content-between align-items-center mb-3">
-				<span class="text-primary">Your cart</span>
+				<h3>Your cart</h3>
 				<span class="badge bg-primary rounded-pill">{product.count}</span>
 			</h4>
 
@@ -142,11 +147,11 @@
 						/>
 					</div>
 					<div class="col">
-						<h6 class="card-title"><b>Card title</b></h6>
-						<small
-							>Some quick example text to build on the card title and make up the bulk of the card's
-							content.</small
-						>
+						<h6 class="card-title"><b>{product.title}</b></h6>
+						<!-- <small>
+                            Some quick example text to build on the card title and make up the bulk of the card's
+							content.
+                        </small> -->
 					</div>
 				</div>
 
@@ -207,7 +212,7 @@
 					<button
 						type="button"
 						id="checkoutButton"
-						class="btn btn-primary btn-lg"
+						class="btn cta-btn btn-lg"
 						disabled={!isPayButtonEnabled}
 						on:click={handlePayment}>Pay</button
 					>
@@ -216,6 +221,9 @@
 		</div>
 
 		<div class="col-md-7 col-lg-8">
+			<h4 class="d-flex justify-content-between align-items-center mb-3">
+				<h3>กรุณากรอกแบบฟอร์ม</h3>
+			</h4>
 			{#if $message}
 				<div class="status" class:error={$page.status >= 400} class:success={$page.status == 200}>
 					{$message}
@@ -230,8 +238,8 @@
 						<FormAddress {form} {errors} />
 					{/if}
 					{#if step === 3}
-						<div>
-							<h3>Детали заказа:</h3>
+						<div class="order">
+							<h3>Order details:</h3>
 							<ul>
 								<li><strong>Name:</strong> {$form.name}</li>
 								<li><strong>Email:</strong> {$form.email}</li>

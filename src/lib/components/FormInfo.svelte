@@ -69,6 +69,6 @@
 		{/if}
 	</div>
 	<div class="d-flex justify-content-between mt-4">
-		<button class="btn btn-primary"> Next </button>
+		<button class="btn cta-btn"> Next </button>
 	</div>
 </div>

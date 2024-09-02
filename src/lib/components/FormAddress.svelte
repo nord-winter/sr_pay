@@ -61,7 +61,7 @@
         {#if $errors.postcode}<div class="invalid-feedback">{$errors.postcode}</div>{/if}
     </div>
     <div class="d-flex justify-content-between mt-4">
-        <button class="btn btn-primary">
+        <button class="btn cta-btn">
             Next
         </button>
     </div>

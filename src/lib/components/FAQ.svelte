@@ -1,64 +1,76 @@
 <script>
-
+    import photoFaq from '$lib/images/faq.png'
 </script>
 
 <section id="faq" class="faq section light-background">
+	<div class="container">
+		<div class="row gy-4">
+			<div class="col-lg-7 d-flex flex-column justify-content-center order-2 order-lg-1">
+				<div class="content px-xl-5" data-aos="fade-up" data-aos-delay="100">
+					<h3><span>คำถามที่พบบ่อยเกี่ยวกับ </span><strong>Scomplex</strong></h3>
+					<p>
+						คำถามที่พบบ่อยเกี่ยวกับผลิตภัณฑ์ Scomplex ของเรา
+						จะช่วยให้คุณได้รับคำตอบเกี่ยวกับการใช้งาน ประโยชน์ และคุณสมบัติต่าง ๆ ของผลิตภัณฑ์นี้
+						เรียนรู้ว่า Scomplex ช่วยในเรื่องการฟื้นฟูและยกกระชับผิวอย่างไร วิธีการใช้ที่ถูกต้อง
+						และสิ่งที่คุณคาดหวังจากการใช้งาน
+						เราได้รวบรวมข้อมูลที่สำคัญเพื่อช่วยให้คุณตัดสินใจได้อย่างมั่นใจและได้ผลลัพธ์ที่ดีที่สุด
+					</p>
+				</div>
 
-    <div class="container">
+				<div class="faq-container px-xl-5" data-aos="fade-up" data-aos-delay="200">
+					<div class="faq-item faq-active">
+						<i class="faq-icon bi bi-question-circle"></i>
+						<h3>Scomplex เหมาะกับผู้ที่มีปัญหาผิวประเภทใด</h3>
+						<div class="faq-content">
+							<p>
+								Scomplex เหมาะสำหรับผู้ที่มีปัญหาริ้วรอย ผิวหย่อนคล้อย
+								และต้องการปรับสภาพผิวให้ดูกระชับและสดใสขึ้น
+							</p>
+						</div>
+						<i class="faq-toggle bi bi-chevron-right"></i>
+					</div>
+					<!-- End Faq item-->
 
-    <div class="row gy-4">
+					<div class="faq-item">
+						<i class="faq-icon bi bi-question-circle"></i>
+						<h3>ควรใช้ Scomplex อย่างไรเพื่อให้ได้ผลดีที่สุด?</h3>
+						<div class="faq-content">
+							<p>
+								ควรรับประทาน Scomplex ตามคำแนะนำบนฉลากผลิตภัณฑ์
+								หรือปรึกษาผู้เชี่ยวชาญด้านสุขภาพเพื่อคำแนะนำเพิ่มเติม
+							</p>
+						</div>
+						<i class="faq-toggle bi bi-chevron-right"></i>
+					</div>
+					<!-- End Faq item-->
 
-        <div class="col-lg-7 d-flex flex-column justify-content-center order-2 order-lg-1">
+					<div class="faq-item">
+						<i class="faq-icon bi bi-question-circle"></i>
+						<h3>Scomplex มีผลข้างเคียงหรือไม่</h3>
+						<div class="faq-content">
+							<p>
+								Scomplex ผลิตจากส่วนผสมธรรมชาติและได้รับการทดสอบว่าปลอดภัย
+								แต่หากมีอาการแพ้หรือไม่พึงประสงค์ ควรหยุดใช้และปรึกษาแพทย์ทันที
+							</p>
+						</div>
+						<i class="faq-toggle bi bi-chevron-right"></i>
+					</div>
+					<!-- End Faq item-->
+				</div>
+			</div>
 
-        <div class="content px-xl-5" data-aos="fade-up" data-aos-delay="100">
-            <h3><span>Frequently Asked </span><strong>Questions</strong></h3>
-            <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit
-            </p>
-        </div>
-
-        <div class="faq-container px-xl-5" data-aos="fade-up" data-aos-delay="200">
-
-            <div class="faq-item faq-active">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Non consectetur a erat nam at lectus urna duis?</h3>
-            <div class="faq-content">
-                <p>Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet non curabitur gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor purus non.</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-            </div><!-- End Faq item-->
-
-            <div class="faq-item">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Feugiat scelerisque varius morbi enim nunc faucibus a pellentesque?</h3>
-            <div class="faq-content">
-                <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-            </div><!-- End Faq item-->
-
-            <div class="faq-item">
-            <i class="faq-icon bi bi-question-circle"></i>
-            <h3>Dolor sit amet consectetur adipiscing elit pellentesque?</h3>
-            <div class="faq-content">
-                <p>Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit. Rutrum tellus pellentesque eu tincidunt. Lectus urna duis convallis convallis tellus. Urna molestie at elementum eu facilisis sed odio morbi quis</p>
-            </div>
-            <i class="faq-toggle bi bi-chevron-right"></i>
-            </div><!-- End Faq item-->
-
-        </div>
-
-        </div>
-
-        <div class="col-lg-5 order-1 order-lg-2">
-        <img src="assets/img/faq.jpg" class="img-fluid" alt="" data-aos="zoom-in" data-aos-delay="100">
-        </div>
-    </div>
-
-    </div>
-
+			<div class="col-lg-5 order-1 order-lg-2">
+				<img
+					src="{photoFaq}"
+					class="img-fluid"
+					alt=""
+					data-aos="zoom-in"
+					data-aos-delay="100"
+				/>
+			</div>
+		</div>
+	</div>
 </section>
 
 <style>
-
 </style>

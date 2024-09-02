@@ -1,10 +1,9 @@
-import { fail } from '@sveltejs/kit';
+import { redirect, fail } from '@sveltejs/kit';
 import { z } from 'zod';
 import { formAddressSchema as lastStep } from '$lib/validation/formShema.js';
 
 export const load = async () => {
 	const form = {
-		// Инициализация пустыми значениями или значениями по умолчанию
 		name: '',
 		email: '',
 		phone: '',
@@ -15,6 +14,11 @@ export const load = async () => {
 		postcode: ''
 	};
 
+
+	// if (!form) {
+	// 	throw redirect(307, '/');
+	// }
+
 	return { form };
 };
 
@@ -22,7 +26,6 @@ export const actions = {
 	default: async ({ request }) => {
 		const formData = Object.fromEntries(await request.formData());
 
-		// Валидация с использованием zod
 		const validationResult = lastStep.safeParse(formData);
 
 		if (!validationResult.success) {

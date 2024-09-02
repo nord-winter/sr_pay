@@ -21,7 +21,7 @@
         <p>มีเสน่ห์ อ่อนวัย สไตล์ตัวแม่</p>
         <div class="d-flex">
             <a href="#pricing">
-                <button type="button" class="btn-get-started btn btn-primary btn-lg px-4 me-md-2" >สั่งซื้อ S-Complex</button>
+                <button type="button" class="btn-get-started btn btn-lg px-4 me-md-2" >สั่งซื้อ S-Complex</button>
             </a>
         </div>
         </div>
