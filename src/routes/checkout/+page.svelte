@@ -248,7 +248,7 @@
 								<li><strong>Address:</strong> {$form.address}</li>
 								<li><strong>District:</strong> {$form.district}</li>
 								<li><strong>Province:</strong> {$form.province}</li>
-								<li><strong>Poastcode:</strong> {$form.postcode}</li>
+								<li><strong>Postcode:</strong> {$form.postcode}</li>
 							</ul>
 						</div>
 					{/if}
